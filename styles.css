@@ -4,7 +4,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
-    background-color: #121212;
+    background-color: #0a0a0a;
     color: #ffffff;
     margin: 0;
     padding: 0;
@@ -17,13 +17,13 @@ body {
     display: flex;
     width: 100%;
     height: 100%;
-    background-color: #333;
+    background-color: #0a0a0a;
     overflow: hidden;
 }
 
 .header {
     width: 200px;
-    background-color: #333;
+    background-color: #0a0a0a;
     border-right: 1px solid #444;
     display: flex;
     flex-direction: column;
@@ -39,7 +39,7 @@ h1 {
 }
 
 .delete-btn {
-    background-color: #ff4b5c;
+    background-color: #e74c3c;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -49,7 +49,7 @@ h1 {
 }
 
 .delete-btn:hover {
-    background-color: #ff1f3c;
+    background-color: #c0392b;
 }
 
 .totalInfo, .totalSize {
@@ -67,13 +67,14 @@ h1 {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    align-content: flex-start; /* ensures that items are aligned at the start */
 }
 
 .imageWrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #444;
+    background-color: #121111;
     padding: 10px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -88,10 +89,12 @@ h1 {
 
 img {
     max-width: 150px;
+    max-height: 150px;
     border-radius: 8px;
     margin-bottom: 10px;
     cursor: pointer;
     transition: opacity 0.3s;
+    object-fit: contain; /* Ensure aspect ratio is maintained */
 }
 
 img[data-src] {
@@ -190,4 +193,30 @@ img.lazy-loaded {
     color: #bbb;
     text-decoration: none;
     cursor: pointer;
+}
+
+.prevImage, .nextImage {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    transition: 0.3s;
+    user-select: none;
+}
+
+.prevImage {
+    left: 0;
+}
+
+.nextImage {
+    right: 0;
+}
+
+.prevImage:hover, .nextImage:hover {
+    color: #bbb;
 }

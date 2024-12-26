@@ -1,11 +1,13 @@
 let currentImagePath = '';
 let currentSelectedImage = null; // Track the current selected image element
+let currentImageIndex = 0;
+let images = [];
 
 function loadImages() {
     fetch('/images')
         .then(response => response.json())
         .then(data => {
-            const images = data.images;
+            images = data.images;
             const total = data.total;
             const totalInfo = document.getElementById('totalInfo');
             const totalSizeInfo = document.getElementById('totalSize');
@@ -15,7 +17,7 @@ function loadImages() {
             totalInfo.innerText = `Total number of files: ${total}`;
 
             let totalSize = 0;
-            images.forEach(image => {
+            images.forEach((image, index) => {
                 const imageWrapper = document.createElement('div');
                 imageWrapper.classList.add('imageWrapper');
 
@@ -30,10 +32,11 @@ function loadImages() {
                     imageWrapper.removeChild(skeleton);
                 });
                 img.addEventListener('click', () => {
-                    openModal(img.dataset.src, image.name);
+                    openModal(img.dataset.src, image.name, index);
                     highlightImage(imageWrapper);
                 });
                 img.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
                     showContextMenu(e, image.name);
                     highlightImage(imageWrapper);
                 });
@@ -69,10 +72,12 @@ function highlightImage(imageWrapper) {
     currentSelectedImage = imageWrapper;
 }
 
-function openModal(src, name) {
+function openModal(src, name, index) {
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
     const captionText = document.getElementById('imageCaption');
+
+    currentImageIndex = index;
 
     modal.style.display = "block";
     modalImg.src = src;
@@ -82,6 +87,18 @@ function openModal(src, name) {
 function closeModal() {
     const modal = document.getElementById('imageModal');
     modal.style.display = "none";
+}
+
+function showNextImage() {
+    currentImageIndex = (currentImageIndex + 1) % images.length;
+    const nextImage = images[currentImageIndex];
+    openModal(`/images/${nextImage.name}`, nextImage.name, currentImageIndex);
+}
+
+function showPrevImage() {
+    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+    const prevImage = images[currentImageIndex];
+    openModal(`/images/${prevImage.name}`, prevImage.name, currentImageIndex);
 }
 
 function lazyLoadImages() {
@@ -119,9 +136,8 @@ function deleteAllCache() {
 }
 
 function showContextMenu(event, imagePath) {
-    event.preventDefault();
-    const contextMenu = document.getElementById('contextMenu');
     currentImagePath = imagePath;
+    const contextMenu = document.getElementById('contextMenu');
 
     contextMenu.style.top = `${event.clientY}px`;
     contextMenu.style.left = `${event.clientX}px`;
@@ -130,8 +146,9 @@ function showContextMenu(event, imagePath) {
     document.addEventListener('click', hideContextMenu);
 }
 
-function hideContextMenu() {
+function hideContextMenu(e) {
     const contextMenu = document.getElementById('contextMenu');
+    if (e && e.target.closest('#contextMenu')) return; // Prevent hiding if clicking inside the context menu
     contextMenu.style.display = 'none';
     document.removeEventListener('click', hideContextMenu);
 }
@@ -167,4 +184,17 @@ window.onload = () => {
 
     const deleteCacheButton = document.getElementById('deleteCacheButton');
     deleteCacheButton.addEventListener('click', deleteAllCache);
+
+    const prevImageBtn = document.getElementById('prevImage');
+    prevImageBtn.addEventListener('click', showPrevImage);
+
+    const nextImageBtn = document.getElementById('nextImage');
+    nextImageBtn.addEventListener('click', showNextImage);
+
+    const modal = document.getElementById('imageModal');
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 };
