@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discord Cache Viewer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+</head>
+<body class="dark-mode">
+<div class="container">
+  <div class="header">
+    <h1>Discord Cache Viewer</h1>
+    <button id="deleteCacheButton" class="delete-btn">Delete All Cache</button>
+    <div id="totalInfo" class="totalInfo"></div>
+    <div id="totalSize" class="totalSize"></div>
+  </div>
+  <div id="imagesContainer" class="imagesContainer"></div>
+</div>
+
+<!-- Custom Context Menu -->
+<div id="contextMenu" class="context-menu">
+  <ul>
+    <li id="openInFileExplorer">Open in File Explorer</li>
+    <li id="deleteImage">Delete</li>
+  </ul>
+</div>
+
+<!-- Modal to display the clicked image -->
+<div id="imageModal" class="imageModal">
+  <span id="closeModal" class="closeModal">&times;</span>
+  <img class="modalContent" id="modalImage">
+  <div id="imageCaption" class="caption"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
