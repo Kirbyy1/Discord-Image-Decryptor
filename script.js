@@ -198,3 +198,32 @@ window.onload = () => {
         }
     });
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+    const imageContainer = document.getElementById("image-container");
+
+    // Function to add an image to the UI
+    function addImage(imageInfo) {
+        const imageElement = document.createElement("img");
+        imageElement.src = `/images/${imageInfo.Name}`;
+        imageElement.alt = imageInfo.Name;
+        imageElement.title = `Name: ${imageInfo.Name}\nSize: ${imageInfo.Size}\nTimestamp: ${imageInfo.Timestamp}`;
+        imageContainer.appendChild(imageElement);
+    }
+
+    // Fetch initial images
+    fetch("/images")
+        .then(response => response.json())
+        .then(data => {
+            data.images.forEach(image => addImage(image));
+        });
+
+    // Poll the server for new images every 5 seconds
+    setInterval(() => {
+        fetch("/new-images")
+            .then(response => response.json())
+            .then(data => {
+                data.newImages.forEach(image => addImage(image));
+            });
+    }, 5000);
+});
